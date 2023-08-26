@@ -1,11 +1,18 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { AppController } from './app/app.controller';
 import { AllExceptionsFilter } from './shared/filters/AllExpeptionsFilter';
+import { ApplicationModule } from './application/application.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './shared/config/configuration';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
+  imports: [
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
+    ApplicationModule,
+  ],
   providers: [
     {
       provide: APP_FILTER,

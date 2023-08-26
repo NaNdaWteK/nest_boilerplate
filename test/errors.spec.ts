@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { AppController } from '../src/app/app.controller';
+import { AppController } from '../src/application/app.controller';
 
 describe('AppController', () => {
   let app: INestApplication;
@@ -26,7 +26,7 @@ describe('AppController', () => {
 
     expect(response.body.errorId).toBeTruthy()
     expect(response.body.timestamp).toBeTruthy()
-    expect(response.body.message).toBe('Test Error')
+    expect(response.body.message).toBe('Internal server error')
     expect(response.body.path).toBe('/v1/healthz')
     expect(response.body.statusCode).toBe(HttpStatus.INTERNAL_SERVER_ERROR)
   });
