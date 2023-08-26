@@ -1,15 +1,17 @@
 import {
   ExceptionFilter,
-  Catch,
   ArgumentsHost,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { randomUUID } from 'crypto';
+import { CustomCatch } from '../domain/decorators/CustomCatch';
+import Logger from '../infrastructure/logger';
 
-@Catch()
+@CustomCatch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger('AllExceptionsFilter')
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown & Error, host: ArgumentsHost): void {
@@ -29,10 +31,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       errorId,
-      message: httpStatus !== HttpStatus.INTERNAL_SERVER_ERROR ? 
-        exception.message :
-        'Internal server error',
+      message: exception.message,
     };
+    this.logger.error(exception.stack || '', responseBody)
+    responseBody.message = httpStatus !== HttpStatus.INTERNAL_SERVER_ERROR ? 
+      exception.message :
+      'Internal server error',
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }

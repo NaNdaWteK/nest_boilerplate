@@ -1,12 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { CustomLogger } from './shared/infrastructure/logger/CustomLogger';
+import Logger from './shared/infrastructure/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  const logger = new CustomLogger()
+  const logger = new Logger('Aplication Bootstrap')
   app.useLogger(logger);
   const port = parseInt(process.env.PORT || '');
   await app.listen(port);

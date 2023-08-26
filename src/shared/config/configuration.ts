@@ -16,7 +16,14 @@ export default ()  => {
         'host': process.env.DATABASE_HOST ?? die('DATABASE_HOST env is not defined'),
         'port': parseInt(process.env.DATABASE_PORT ?? die('DATABASE_PORT env is not defined'))
       }
+    }),
+    'testing': () => ({
+      'port': parseInt(process.env.PORT ?? die('PORT env is not defined')),
+      'database': {
+        'host': process.env.DATABASE_HOST ?? die('DATABASE_HOST env is not defined'),
+        'port': parseInt(process.env.DATABASE_PORT ?? die('DATABASE_PORT env is not defined'))
+      }
     })
   }
-  return config[environment];
+  return config[environment]();
 }
