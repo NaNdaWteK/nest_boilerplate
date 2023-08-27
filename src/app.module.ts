@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import { AllExceptionsFilter } from './shared/filters/AllExpeptionsFilter';
 import { ApplicationModule } from './application/application.module';
-import { ConfigModule } from '@nestjs/config';
 import configuration from './shared/config/configuration';
+import { ValidationPipe } from './shared/pipes/ValidationPipe';
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import configuration from './shared/config/configuration';
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
     },
   ],
 })

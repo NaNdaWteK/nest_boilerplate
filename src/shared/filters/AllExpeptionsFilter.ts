@@ -14,7 +14,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger('AllExceptionsFilter')
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: unknown & Error, host: ArgumentsHost): void {
+  catch(exception: any, host: ArgumentsHost): void {
+    console.log(exception)
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
@@ -32,7 +33,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       errorId,
       message: exception.message,
+      extraInfo: exception.response || {},
     };
+    
     this.logger.error(exception.stack || '', responseBody)
     responseBody.message = httpStatus !== HttpStatus.INTERNAL_SERVER_ERROR ? 
       exception.message :
