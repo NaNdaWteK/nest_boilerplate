@@ -2,12 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import Logger from './shared/infrastructure/logger';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
 
+  app.use(helmet());
+  
   const config = new DocumentBuilder()
     .setTitle('Api Docs')
     .setDescription('Api documentation')
